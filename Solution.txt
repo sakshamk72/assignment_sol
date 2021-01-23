@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+// 1970-01-01 is Thu.
+string initial_date="1970-01-01";
+map <string,int> mp,mp1;
+//Input array.
+mp.insert({"2020-01-01",4});
+mp.insert({"2020-01-02",4});
+mp.insert({"2020-01-03",6});
+mp.insert({"2020-01-04",8});
+mp.insert({"2020-01-05",2});
+mp.insert({"2020-01-06",-6});
+mp.insert({"2020-01-07",2});
+mp.insert({"2020-01-08",-2});
+// output array
+mp1.insert({"Mon",0});
+mp1.insert({"Tue",0});
+mp1.insert({"Wed",0});
+mp1.insert({"Thu",0});
+mp1.insert({"Fri",0});
+mp1.insert({"Sat",0});
+mp1.insert({"Sun",0});
+bool flag[7];
+memset(flag,false,sizeof(flag));
+for (auto itr = mp.begin(); itr != mp.end(); ++itr) {
+    string final_date=itr->first;
+    stringstream ss(initial_date+ "-" + final_date); 
+    int year, month, day; 
+    char hyphen; 
+       ss >> year >> hyphen >> month >> hyphen >> day; 
+    struct tm starttm = { 0, 0, 0, day, month - 1, year - 1900 }; 
+    time_t start = mktime(&starttm); 
+    ss >> hyphen >> year >> hyphen 
+        >> month >> hyphen >> day; 
+    struct tm endtm = { 0, 0, 0, day, month - 1, year - 1900 }; 
+    time_t end = mktime(&endtm); 
+    int num= abs(end - start) / 86400; 
+num=num%7;
+string str="Thu"; // Since 1970-01-01 is Thu.
+if(num==0)
+{flag[3]=1;}
+if(num==1)
+{str="Fri";
+flag[4]=1;}
+if(num==2)
+{str="Sat";
+flag[5]=1;}
+if(num==3)
+{str="Sun";
+flag[6]=1;}
+if(num==4)
+{str="Mon";
+flag[0]=1;}
+if(num==5)
+{str="Tue";
+flag[1]=1;}
+if(num==6)
+{str="Wed";
+flag[2]=1;}
+mp1[str]+=itr->second;
+    }
+    int ar[7];
+    memset(ar,0,sizeof(ar));
+    for (auto itr = mp1.begin(); itr != mp1.end(); ++itr) {
+    if(itr->first=="Mon")
+        ar[0]+=itr->second;
+        else if(itr->first=="Tue")
+        ar[1]+=itr->second;
+        else if(itr->first=="Wed")
+        ar[2]+=itr->second;
+        else if(itr->first=="Thu")
+        ar[3]+=itr->second;
+        else if(itr->first=="Fri")
+        ar[4]+=itr->second;
+        else if(itr->first=="Sat")
+        ar[5]+=itr->second;
+        else
+        ar[6]+=itr->second;
+    }
+    for(int i=1;i<6;i++)
+    {
+        if(flag[i]==0)
+        ar[i]=(ar[i-1]+ar[i+1])/2;
+    }
+     for(int i=1;i<6;i++)
+    {
+        if(i==1)
+        mp1["Tue"]=ar[i];
+        if(i==2)
+        mp1["Wed"]=ar[i];
+        if(i==3)
+        mp1["Thu"]=ar[i];
+        if(i==4)
+        mp1["Fri"]=ar[i];
+        if(i==5)
+        mp1["Sat"]=ar[i];
+    }
+    for (auto itr = mp1.begin(); itr != mp1.end(); ++itr) { 
+        cout <<itr->first 
+             << '\t' << itr->second << '\n'; 
+    } 
+    
+}
